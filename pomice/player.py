@@ -10,8 +10,8 @@ from typing import Union
 
 from discord import Client
 from discord import Guild
-from discord import VoiceChannel
 from discord import VoiceProtocol
+from discord.abc import Connectable
 from discord.ext import commands
 
 from . import events
@@ -156,7 +156,7 @@ class Player(VoiceProtocol):
         "_player_endpoint_uri",
     )
 
-    def __call__(self, client: Client, channel: VoiceChannel) -> Player:
+    def __call__(self, client: Client, channel: Connectable) -> Player:
         self.client = client
         self.channel = channel
         self._guild = channel.guild
@@ -166,12 +166,12 @@ class Player(VoiceProtocol):
     def __init__(
         self,
         client: Client,
-        channel: VoiceChannel,
+        channel: Connectable,
         *,
         node: Optional[Node] = None,
     ) -> None:
         self.client: Client = client
-        self.channel: VoiceChannel = channel
+        self.channel: Connectable = channel
         self._guild = channel.guild
 
         self._bot: Client = client
@@ -644,7 +644,7 @@ class Player(VoiceProtocol):
             self._log.debug(f"Player volume has been adjusted to {volume}")
         return self._volume
 
-    async def move_to(self, channel: VoiceChannel) -> None:
+    async def move_to(self, channel: Connectable) -> None:
         """Moves the player to a new voice channel."""
 
         await self.guild.change_voice_state(channel=channel)
